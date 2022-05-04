@@ -1,5 +1,6 @@
 ﻿using System;
 using Server.World;
+using Server.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Server
@@ -15,10 +16,11 @@ namespace Server
             ServerConfig = serviceProvider.GetService<Config>();
         }
 
-        public void GameServerStart()
+        public async void GameServerStart()
         {
             ServiceProvider.GetService<ThreadsRoom>();
             ServiceProvider.GetService<PreCheckStartServiceRepository>().Initialise();
+            IdFactory.Instance.Initialise(ServiceProvider.GetService<IGetAllIdsInitialise>());
         }
     }
 }

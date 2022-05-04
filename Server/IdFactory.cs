@@ -1,8 +1,12 @@
-﻿namespace Server
+﻿using System;
+using Server.Service;
+
+namespace Server
 {
-    public class IdFactory
+    public sealed class IdFactory
     {
         public int CurrentId { get; private set; }
+        public bool Initialised { get; private set; }
 
         private static volatile IdFactory _instance;
         private static readonly object SyncRoot = new object();
@@ -22,6 +26,18 @@
 
                 return _instance;
             }
+        }
+
+        public async void Initialise(IGetAllIdsInitialise getAll)
+        {
+            if (Initialised)
+                return;
+
+            CurrentId += (await getAll.GetAccountIdsListAsync()).Count;
+            CurrentId += (await getAll.GetPlayerIdsListAsync()).Count;
+
+            Console.WriteLine($"An initialized object indexer. Total {CurrentId}");
+            Initialised = true;
         }
 
         public IdFactory(int defaultId)

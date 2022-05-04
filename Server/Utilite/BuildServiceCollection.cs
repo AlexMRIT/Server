@@ -15,6 +15,8 @@ namespace Server.Utilite
             serviceDescriptors.AddSingleton<PreCheckStartServiceRepository>();
 
             serviceDescriptors.AddSingleton<ICheckService, CheckRepository>();
+            serviceDescriptors.AddSingleton<IAccountServices, AccountServices>();
+            serviceDescriptors.AddSingleton<IGetAllIdsInitialise, GetAllIdsInitialise>();
         }
     }
 }

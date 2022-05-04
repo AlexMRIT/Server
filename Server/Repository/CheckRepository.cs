@@ -11,7 +11,7 @@ namespace Server.Repository
 {
     public sealed class CheckRepository : ICheckService
     {
-        internal IDbConnection Db;
+        private readonly IDbConnection Db;
 
         private const int PingTimeoutMs = 3000;
         private const int PingRetryAttempts = 5;
@@ -24,7 +24,7 @@ namespace Server.Repository
 
         public CheckRepository()
         {
-            Db = new MySqlConnection("Server=127.0.0.1;Database=server;Uid=server;Pwd=gameserver;SslMode=none;");
+            Db = new MySqlConnection("Server=127.0.0.1;Database=server;Uid=root;Pwd=server;SslMode=none;");
 
             MySqlConnectionStringBuilder connStrBuilder = new MySqlConnectionStringBuilder(Db.ConnectionString);
             _host = connStrBuilder.Server;
@@ -39,7 +39,7 @@ namespace Server.Repository
             if (!CheckMySqlService())
                 return false;
 
-            if (!await CheckDatabaseQuery())
+            if (!await CheckDatabaseQueryAsync())
                 return false;
 
             return true;
@@ -113,11 +113,11 @@ namespace Server.Repository
             return true;
         }
 
-        private async Task<bool> CheckDatabaseQuery()
+        private async Task<bool> CheckDatabaseQueryAsync()
         {
             Console.WriteLine("Checking if query to database works...");
 
-            bool isQuerySuccessful = await TryQueryDatabase();
+            bool isQuerySuccessful = await TryQueryDatabaseAsync();
 
             if (isQuerySuccessful)
                 Console.WriteLine($"Query to database '{_database}' was SUCCESSFUL!");
@@ -127,15 +127,15 @@ namespace Server.Repository
             return isQuerySuccessful;
         }
 
-        private async Task<bool> TryQueryDatabase()
+        private async Task<bool> TryQueryDatabaseAsync()
         {
             try
             {
-                return (await Db.QueryAsync("SELECT 1")).Any();
+                return (await Db.QueryAsync<bool>("select 1")).Any();
             }
             catch (MySqlException exception)
             {
-                ExceptionHandler.ExecuteMySQLException(exception, nameof(TryQueryDatabase));
+                ExceptionHandler.ExecuteMySQLException(exception, nameof(TryQueryDatabaseAsync));
             }
 
             return false;

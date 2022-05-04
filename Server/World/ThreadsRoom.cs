@@ -2,32 +2,40 @@
 using System.Linq;
 using Server.Models;
 using Server.Utilite;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Server.World
 {
     public sealed class ThreadsRoom
     {
-        private readonly Dictionary<int, Room> ServerRooms;
+        private readonly ConcurrentDictionary<int, Room> ServerRooms;
         private readonly IServiceProvider ServiceProvider;
         private readonly Config ServerConfig;
 
         public ThreadsRoom(IServiceProvider serviceProvider)
         {
-            ServerRooms = new Dictionary<int, Room>();
+            ServerRooms = new ConcurrentDictionary<int, Room>();
             ServiceProvider = serviceProvider;
             ServerConfig = serviceProvider.GetService<Config>();
 
             for (int iterator = 0; iterator < ServerConfig.MaxOpenRoomPreStartServer; iterator++)
-                ServerRooms.Add(IdFactory.Instance.NextId(), new Room(ServiceProvider));
+                ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider));
 
             Console.WriteLine($"Initialized {ServerConfig.MaxOpenRoomPreStartServer} rooms.");
         }
 
         public bool IfExistEntityByRoomId(int id, Entity entity)
         {
-            return ServerRooms.Where((item) => item.Key.Equals(id)).Any((result) => result.Value.IfExistEntity(entity));
+            try
+            {
+                return ServerRooms[id].IfExistEntity(entity);
+            }
+            catch (IndexOutOfRangeException exception)
+            {
+                ExceptionHandler.Execute(exception, nameof(IfExistEntityByRoomId));
+                return false;
+            }
         }
 
         public Entity GetEntityById(int idRoom, int id)

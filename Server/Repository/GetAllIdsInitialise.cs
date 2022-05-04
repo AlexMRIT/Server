@@ -15,14 +15,14 @@ namespace Server.Repository
 
         public GetAllIdsInitialise()
         {
-            Db = new MySqlConnection("Server=127.0.0.1;Database=server;Uid=root;Pwd=server;SslMode=none;");
+            Db = new MySqlConnection(MySQLFormattedExpression.ConnectionString);
         }
 
         public async Task<List<int>> GetAccountIdsListAsync()
         {
             try
             {
-                return (await Db.QueryAsync<int>("select id from accounts")).ToList();
+                return (await Db.QueryAsync<int>(MySQLFormattedExpression.GetAccountIdsList)).ToList();
             }
             catch (MySqlException exception)
             {
@@ -36,7 +36,7 @@ namespace Server.Repository
         {
             try
             {
-                return (await Db.QueryAsync<int>("select id from characters")).ToList();
+                return (await Db.QueryAsync<int>(MySQLFormattedExpression.GetPlayerIdsList)).ToList();
             }
             catch (MySqlException exception)
             {

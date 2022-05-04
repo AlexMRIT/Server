@@ -14,14 +14,14 @@ namespace Server.Service
 
         public AccountServices()
         {
-            Db = new MySqlConnection("Server=127.0.0.1;Database=server;Uid=root;Pwd=server;SslMode=none;");
+            Db = new MySqlConnection(MySQLFormattedExpression.ConnectionString);
         }
 
         public async Task<bool> CheckIfAccountIsCorrectAsync(string login, string password)
         {
             try
             {
-                return (await Db.QueryAsync<bool>("select distinct 1 from accounts where login=@_login and password=@_password", new
+                return (await Db.QueryAsync<bool>(MySQLFormattedExpression.CheckIfAccountIsCorrect, new
                 {
                     _login = login,
                     _password = password
@@ -40,7 +40,7 @@ namespace Server.Service
             try
             {
                 int id = IdFactory.Instance.NextId();
-                await Db.ExecuteAsync("insert into accounts (id, login, password) values (@_id, @_login, @_password)", new
+                await Db.ExecuteAsync(MySQLFormattedExpression.CreateAccount, new
                 {
                     _id = id,
                     _login = login,
@@ -67,7 +67,7 @@ namespace Server.Service
         {
             try
             {
-                return (await Db.QueryAsync<AccountContract>("select id as Id, login, password as Password from accounts where login=@_login", new
+                return (await Db.QueryAsync<AccountContract>(MySQLFormattedExpression.GetAccountByLogin, new
                 {
                     _login = login
                 })).FirstOrDefault();

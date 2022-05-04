@@ -24,7 +24,7 @@ namespace Server.Repository
 
         public CheckRepository()
         {
-            Db = new MySqlConnection("Server=127.0.0.1;Database=server;Uid=root;Pwd=server;SslMode=none;");
+            Db = new MySqlConnection(MySQLFormattedExpression.ConnectionString);
 
             MySqlConnectionStringBuilder connStrBuilder = new MySqlConnectionStringBuilder(Db.ConnectionString);
             _host = connStrBuilder.Server;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 
 namespace Server.Utilite
@@ -13,6 +14,11 @@ namespace Server.Utilite
         public static void ExecuteMySQLException(MySqlException exception, string methodName)
         {
             Console.WriteLine($"Method: {methodName}. Message: '{exception.Message}' (Error Number: '{exception.Number}')");
+        }
+
+        public static void ExecuteSocketException(SocketException exception, string methodName)
+        {
+            Console.WriteLine($"Method: {methodName}. Message: '{exception.Message}' Socket Error '{exception.ErrorCode}' (Error Number: '{exception.NativeErrorCode}')");
         }
     }
 }

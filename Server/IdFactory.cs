@@ -1,5 +1,6 @@
 ﻿using System;
 using Server.Service;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -30,6 +31,7 @@ namespace Server
 
         public async void Initialise(IGetAllIdsInitialise getAll)
         {
+            Debug.Assert(!Initialised, $"{nameof(IdFactory)} is already Initialise!");
             if (Initialised)
                 return;
 

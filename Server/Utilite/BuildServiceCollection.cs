@@ -1,5 +1,6 @@
 ﻿using Server.World;
 using Server.Service;
+using Server.Network;
 using Server.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +13,8 @@ namespace Server.Utilite
             serviceDescriptors.AddSingleton<Config>();
             serviceDescriptors.AddSingleton<GameServer>();
             serviceDescriptors.AddSingleton<ThreadsRoom>();
+            serviceDescriptors.AddSingleton<ServerHandler>();
+            serviceDescriptors.AddSingleton<ClientHandler>();
             serviceDescriptors.AddSingleton<PreCheckStartServiceRepository>();
 
             serviceDescriptors.AddSingleton<ICheckService, CheckRepository>();

@@ -21,6 +21,7 @@ namespace Server
             ServiceProvider.GetService<ThreadsRoom>();
             ServiceProvider.GetService<PreCheckStartServiceRepository>().Initialise();
             IdFactory.Instance.Initialise(ServiceProvider.GetService<IGetAllIdsInitialise>());
+            ServiceProvider.GetService<ServerHandler>().Initialise();
         }
     }
 }

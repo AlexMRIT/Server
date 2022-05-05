@@ -7,5 +7,6 @@
         public readonly int TickSendPackets = 1000;
         public readonly int MaxCountPlayerForRoom = 2;
         public readonly int MaxOpenRoomPreStartServer = 1;
+        public readonly int Port = 27015;
     }
 }

@@ -25,7 +25,7 @@ namespace Server
             ClientManager = serviceProvider.GetService<ClientHandler>();
         }
 
-        public void Initialise()
+        public void Initialize()
         {
             Debug.Assert(!Initialised, "TCP server is already started!");
             if (Initialised)
@@ -40,7 +40,7 @@ namespace Server
             }
             catch (SocketException exception)
             {
-                ExceptionHandler.ExecuteSocketException(exception, nameof(ServerHandler.Initialise));
+                ExceptionHandler.ExecuteSocketException(exception, nameof(ServerHandler.Initialize));
             }
 
             Console.WriteLine($"Listening GameServers on port {ServerConfig.Port}");

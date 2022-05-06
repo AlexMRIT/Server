@@ -18,12 +18,36 @@ namespace Server.Network
 
             FloodClientCollection = new ConcurrentDictionary<string, DateTime>();
             ClientSuccessfullyRegister = new ConcurrentDictionary<string, ClientProcessor>();
-            PacketHandler = new GamePacketHandler();
+            PacketHandler = new GamePacketHandler(ServiceProvider);
         }
 
         public void AddClient(TcpClient client)
         {
+            string ip = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
+            if (FloodClientCollection.ContainsKey(ip))
+            {
+                if (FloodClientCollection[ip].CompareTo(DateTime.UtcNow) == 1)
+                {
+                    Console.WriteLine($"Active flooder: {ip}");
+                    client.Close();
+                    return;
+                }
+
+                FloodClientCollection.TryRemove(ip, out _);
+            }
+
+            FloodClientCollection.AddOrUpdate(ip, DateTime.UtcNow.AddMilliseconds(3000), (a, b) => DateTime.UtcNow.AddMilliseconds(3000));
+            ClientProcessor gameClient = new ClientProcessor(this, client, PacketHandler);
+
+            ClientSuccessfullyRegister.TryAdd(ip, gameClient);
+            Console.WriteLine($"{FloodClientCollection.Count} active connections");
+        }
+
+        public void ClientDisconnectFromRegister(string ip)
+        {
+            ClientSuccessfullyRegister.TryRemove(ip, out _);
+            Console.WriteLine($"{FloodClientCollection.Count} active connections");
         }
     }
 }

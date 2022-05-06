@@ -12,7 +12,7 @@ namespace Server
             CheckService = checkService;
         }
 
-        public async void Initialise()
+        public async void Initialize()
         {
             if (await CheckService.PreCheckRepositoryAsync())
             {

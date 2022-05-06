@@ -19,9 +19,9 @@ namespace Server
         public async void GameServerStart()
         {
             ServiceProvider.GetService<ThreadsRoom>();
-            ServiceProvider.GetService<PreCheckStartServiceRepository>().Initialise();
-            IdFactory.Instance.Initialise(ServiceProvider.GetService<IGetAllIdsInitialise>());
-            ServiceProvider.GetService<ServerHandler>().Initialise();
+            ServiceProvider.GetService<PreCheckStartServiceRepository>().Initialize();
+            IdFactory.Instance.Initialize(ServiceProvider.GetService<IGetAllIdsInitialise>());
+            ServiceProvider.GetService<ServerHandler>().Initialize();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Server.Network;
 using System.Collections.Generic;
 
 namespace Server.Utilite
@@ -33,6 +34,11 @@ namespace Server.Utilite
         public static bool EndsWithMatchCase(this string str, string stringToCompare)
         {
             return str.EndsWith(stringToCompare, StringComparison.InvariantCulture);
+        }
+
+        public static NetworkPacket ToPacket(this byte[] buffer, int extraBytes = 0)
+        {
+            return new NetworkPacket(1 + extraBytes, buffer);
         }
 
         public static SortedList<TKey, TValue> ToSortedList<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)

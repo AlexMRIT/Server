@@ -29,7 +29,7 @@ namespace Server
             }
         }
 
-        public async void Initialise(IGetAllIdsInitialise getAll)
+        public async void Initialize(IGetAllIdsInitialise getAll)
         {
             Debug.Assert(!Initialised, $"{nameof(IdFactory)} is already Initialise!");
             if (Initialised)

@@ -2,9 +2,11 @@
 using System.Net;
 using Server.Models;
 using Server.Utilite;
+using Server.Contracts;
 using Server.Exceptions;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 #pragma warning disable CS4014
 
@@ -18,8 +20,9 @@ namespace Server.Network
         public GamePacketHandler PacketHandler { get; }
         public EndPoint Address { get; }
         public bool IsDisconnected { get; private set; }
-        public CharacterEntity CurrentCharacetr { get; set; }
+        public CharacterEntity CurrentCharacter { get; set; }
         public ClientSession CurrentSession { get; private set; }
+        public AccountContract CurrectAccountContract { get; set; }
 
         private const int OpCodeLength = 2;
 
@@ -32,10 +35,33 @@ namespace Server.Network
             StreamClient = tcpClient;
             NetworkStreamClient = tcpClient.GetStream();
             PacketHandler = gamePacketHandler;
-            CurrentSession = new ClientSession(authorization: false, gamePlaying: false);
+            CurrentSession = new ClientSession(authorization: true, matchSearch: false, gamePlaying: false);
+
+            Task.Factory.StartNew(ReadAsync);
         }
 
-        public async void Read()
+        public async Task WriteAsync(NetworkPacket packet)
+        {
+            if (IsDisconnected)
+                return;
+
+            byte[] buffer = packet.GetBuffer();
+            List<byte> bytesBuild = new List<byte>();
+            bytesBuild.BuildBufferWithOpcodePacket(buffer);
+
+            try
+            {
+                await NetworkStreamClient.WriteAsync(bytesBuild.ToArray(), 0, bytesBuild.Count);
+                await NetworkStreamClient.FlushAsync();
+            }
+            catch
+            {
+                Console.WriteLine($"Client {CurrectAccountContract.Id} terminated.");
+                Disconnect();
+            }
+        }
+
+        public async void ReadAsync()
         {
             try
             {
@@ -70,7 +96,7 @@ namespace Server.Network
             }
             catch (Exception exception)
             {
-                ExceptionHandler.Execute(exception, nameof(ClientProcessor.Read));
+                ExceptionHandler.Execute(exception, nameof(ClientProcessor.ReadAsync));
                 Disconnect();
             }
         }
@@ -81,8 +107,8 @@ namespace Server.Network
 
             try
             {
-                if (CurrentCharacetr.Online)
-                    CurrentCharacetr.SetOffline();
+                if (CurrentCharacter.Online)
+                    CurrentCharacter.SetOffline();
             }
             catch (NullReferenceException exception)
             {
@@ -94,6 +120,16 @@ namespace Server.Network
             NetworkStreamClient.Close();
 
             ManagerClient.ClientDisconnectFromRegister(Address.ToString());
+        }
+
+        public bool LoggedAlready(int id)
+        {
+            return (ManagerClient.LoggedAlready(Address.ToString()).CurrectAccountContract?.Id.Equals(id)).Value;
+        }
+
+        public void LoggedOtherAccountDisconnect()
+        {
+            ManagerClient.LoggedAlready(Address.ToString()).Disconnect();
         }
     }
 }

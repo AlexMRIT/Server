@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Server.Service;
 
 namespace Server
@@ -12,7 +13,7 @@ namespace Server
             CheckService = checkService;
         }
 
-        public async void Initialize()
+        public async Task Initialize()
         {
             if (await CheckService.PreCheckRepositoryAsync())
             {

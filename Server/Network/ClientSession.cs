@@ -5,24 +5,27 @@ namespace Server.Network
 {
     public sealed class ClientSession
     {
-        public bool SessionClientAuthorizationOk { get; set; }
+        public bool SessionClientAuthorization { get; set; }
+        public bool SessionClientMatchSearch { get; set; }
         public bool SessionCLientGamePlaying { get; set; }
 
-        public ClientSession(bool authorization, bool gamePlaying)
+        public ClientSession(bool authorization, bool matchSearch, bool gamePlaying)
         {
-            SessionClientAuthorizationOk = authorization;
+            SessionClientAuthorization = authorization;
+            SessionClientMatchSearch = matchSearch;
             SessionCLientGamePlaying = gamePlaying;
         }
 
         public override string ToString()
         {
-            return $"Authorization: {SessionClientAuthorizationOk}\tGame Playing: {SessionCLientGamePlaying}";
+            return $"Authorization: {SessionClientAuthorization}\tMatch Search: {SessionClientMatchSearch}\tGame Playing: {SessionCLientGamePlaying}";
         }
 
         public static bool operator ==(ClientSession firstArg, ClientSession secondArg)
         {
             return firstArg is object && secondArg is object
-                && firstArg.SessionClientAuthorizationOk == secondArg.SessionClientAuthorizationOk
+                && firstArg.SessionClientAuthorization == secondArg.SessionClientAuthorization
+                && firstArg.SessionClientMatchSearch == secondArg.SessionClientMatchSearch
                 && firstArg.SessionCLientGamePlaying == secondArg.SessionCLientGamePlaying;
         }
 

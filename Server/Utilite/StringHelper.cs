@@ -41,6 +41,12 @@ namespace Server.Utilite
             return new NetworkPacket(1 + extraBytes, buffer);
         }
 
+        public static void BuildBufferWithOpcodePacket(this List<byte> bytes, byte[] buffer)
+        {
+            bytes.AddRange(BitConverter.GetBytes((short)(buffer.Length + 2)));
+            bytes.AddRange(buffer);
+        }
+
         public static SortedList<TKey, TValue> ToSortedList<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
         {
             SortedList<TKey, TValue> ret = new SortedList<TKey, TValue>();

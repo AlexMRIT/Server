@@ -49,5 +49,13 @@ namespace Server.Network
             ClientSuccessfullyRegister.TryRemove(ip, out _);
             Console.WriteLine($"{FloodClientCollection.Count} active connections");
         }
+
+        public ClientProcessor LoggedAlready(string ip)
+        {
+            if (!ClientSuccessfullyRegister.ContainsKey(ip))
+                return null;
+
+            return ClientSuccessfullyRegister[ip];
+        }
     }
 }

@@ -10,12 +10,23 @@ namespace Server.World
         private readonly Entity[] entities;
         private readonly Config ServerConfig;
 
+        public string RoomName { get; private set; }
+        public string RoomDescription { get; private set; }
+
         public int CurrentCount = 0;
 
         public Room(IServiceProvider serviceProvider)
         {
             ServerConfig = serviceProvider.GetService<Config>();
             entities = new Entity[ServerConfig.MaxCountPlayerForRoom];
+        }
+
+        public Room Initialize(string name, string description)
+        {
+            RoomName = name;
+            RoomDescription = description;
+
+            return this;
         }
 
         public bool IfExistEntity(Entity entity)

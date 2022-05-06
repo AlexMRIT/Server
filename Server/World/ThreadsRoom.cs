@@ -2,6 +2,7 @@
 using System.Linq;
 using Server.Models;
 using Server.Utilite;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +21,7 @@ namespace Server.World
             ServerConfig = serviceProvider.GetService<Config>();
 
             for (int iterator = 0; iterator < ServerConfig.MaxOpenRoomPreStartServer; iterator++)
-                ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider));
+                ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider).Initialize($"Room {iterator}", "Server Room"));
 
             Console.WriteLine($"Initialized {ServerConfig.MaxOpenRoomPreStartServer} rooms.");
         }
@@ -62,6 +63,17 @@ namespace Server.World
                 ExceptionHandler.Execute(exception, nameof(AddEntity));
                 return false;
             }
+        }
+
+        public void AddRoom(string name, string description)
+        {
+            ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider).Initialize(name, description));
+        }
+
+        public IEnumerable<Room> GetAllRooms()
+        {
+            foreach (KeyValuePair<int, Room> room in ServerRooms)
+                yield return room.Value;
         }
 
         public bool RemoveEntity(int idRoom, Entity entity)

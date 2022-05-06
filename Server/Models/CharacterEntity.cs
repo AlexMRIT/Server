@@ -7,6 +7,7 @@ namespace Server.Models
     {
         public CharacterTemplate CharacterTemplate;
         public bool Online = default;
+        public int RoomId { get; set; }
 
         public CharacterEntity(CharacterTemplate characterTemplate)
             : base(characterTemplate)

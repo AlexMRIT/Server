@@ -233,10 +233,14 @@ namespace Server.Network
             }
         }
 
-        public unsafe string ReadString()
+        public unsafe string ReadString(int length)
         {
-            fixed (byte* buf = _buffer)
-                return MemoryBuffer.GetTrimmedString(buf, ref _offset, _buffer.Length);
+            byte[] buffer = new byte[length];
+
+            for (int iterator = 0; iterator < length; iterator++)
+                buffer[iterator] = ReadByte();
+
+            return Encoding.Default.GetString(buffer, 0, length);
         }
 
         public bool InternalReadBool()

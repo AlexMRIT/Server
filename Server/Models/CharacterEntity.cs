@@ -17,7 +17,7 @@ namespace Server.Models
             : base(characterTemplate)
         {
             CharacterTemplate = characterTemplate;
-            CharacterStats = new CharacterStats(this);
+            CharacterStats = new CharacterStats(this, characterTemplate.BaseSpecification);
         }
 
         public void SetOffline()
@@ -27,9 +27,7 @@ namespace Server.Models
 
         public override async Task<DamageResult> TakeDamage(CharacterEntity target)
         {
-
-
-            return await base.TakeDamage(target);
+            throw new NotImplementedException();
         }
     }
 }

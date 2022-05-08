@@ -1,78 +1,91 @@
 ﻿using System;
-using System.Linq;
 using Server.Models;
+using Server.Exceptions;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Server.World
 {
     public sealed class Room
     {
-        private readonly Entity[] entities;
+        private readonly ConcurrentDictionary<int, Entity> EntityObjects;
         private readonly Config ServerConfig;
+        private readonly string ExceptionMessageNotAccess = "Room access error. An uninitialized area.";
 
         public string RoomName { get; private set; }
         public string RoomDescription { get; private set; }
-
-        public int CurrentCount = 0;
+        public bool Initialized { get; private set; }
 
         public Room(IServiceProvider serviceProvider)
         {
             ServerConfig = serviceProvider.GetService<Config>();
-            entities = new Entity[ServerConfig.MaxCountPlayerForRoom];
+            EntityObjects = new ConcurrentDictionary<int, Entity>();
         }
 
         public Room Initialize(string name, string description)
         {
             RoomName = name;
             RoomDescription = description;
+            Initialized = true;
 
             return this;
         }
 
         public bool IfExistEntity(Entity entity)
         {
-            return entities.Any((item) => item.Template.Id.Equals(entity.Template.Id));
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
+
+            return EntityObjects.ContainsKey(entity.Template.Id);
         }
 
         public Entity GetEntityById(int id)
         {
-            return entities.FirstOrDefault((item) => item.Template.Equals(id));
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
+
+            if (!EntityObjects.ContainsKey(id))
+                return null;
+
+            return EntityObjects[id];
         }
 
         public bool AddEntity(Entity entity)
         {
-            if (CurrentCount >= ServerConfig.MaxCountPlayerForRoom)
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
+
+            if (GetCountEntitesInRoom() >= ServerConfig.MaxCountPlayerForRoom)
                 return false;
 
-            entities[CurrentCount] = entity;
-            CurrentCount++;
-            return true;
+            return EntityObjects.TryAdd(entity.Template.Id, entity);
         }
 
         public bool RemoveEntity(Entity entity)
         {
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
+
             if (!IfExistEntity(entity))
                 return false;
 
-            entities[GetEntityByRoomId(entity.Template.Id)] = null;
-            CurrentCount--;
-            return true;
+            return EntityObjects.TryRemove(entity.Template.Id, out _);
         }
 
-        private int GetEntityByRoomId(int id)
+        private int GetCountEntitesInRoom()
         {
-            int result = 0;
-            for (int iterator = 0; iterator < entities.Length; iterator++)
-                if (entities[iterator] != null && (bool)entities[iterator]?.Template.Id.Equals(id))
-                    result++;
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
 
-            return result;
+            return EntityObjects.Count;
         }
 
         public void RemoveAllEntity()
         {
-            entities.Select((item) => item = null);
-            CurrentCount = 0;
+            if (!Initialized)
+                throw new RoomInitializeException(ExceptionMessageNotAccess);
+
+            EntityObjects.Clear();
         }
     }
 }

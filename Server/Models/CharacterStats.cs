@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Server.Template;
+using System.Threading;
 
 namespace Server.Models
 {
@@ -7,18 +8,22 @@ namespace Server.Models
         private readonly Calculator[] Calculators;
         private readonly CharacterEntity Player;
 
-        public CharacterStats(CharacterEntity characterEntity)
+        public CharacterStats(CharacterEntity characterEntity, BaseSpecificationForCharacter baseSpecification)
         {
             Calculators = Calculator.GetCalculatorsForStats();
             Player = characterEntity;
+
+            _strength = baseSpecification.Strenght;
+            _dextity = baseSpecification.Dextity;
+            _endurance = baseSpecification.Endurance;
         }
 
         private const int DefaultParameterStat = 1;
         private const int _baseStatParameter = 1;
 
-        private int _strength = 1;
-        private int _dextity = 1;
-        private int _endurance = 1;
+        private int _strength;
+        private int _dextity;
+        private int _endurance;
 
         private int _baseHealth = 50;
         private int _baseMinPhysicsDamagePoint = 1;
@@ -31,17 +36,17 @@ namespace Server.Models
         public int BasePhysicsDamageMinChange { get => _baseMinPhysicsDamagePoint; set => _baseMinPhysicsDamagePoint = value; }
         public int BasePhysicsDamageMaxChange { get => _baseMaxPhysicsDamagePoint; set => _baseMaxPhysicsDamagePoint = value; }
 
-        public float CriticalAddDamage => _baseStatParameter + CalculateStat(CharacterStatId.DamageCritical, DefaultParameterStat);
-        public float AttackSpeed => _baseStatParameter + CalculateStat(CharacterStatId.AttackSpeed, DefaultParameterStat);
+        public double CriticalAddDamage => _baseStatParameter + CalculateStat(CharacterStatId.DamageCritical, DefaultParameterStat);
+        public double AttackSpeed => _baseStatParameter + CalculateStat(CharacterStatId.AttackSpeed, DefaultParameterStat);
         public int HealthPoint => _baseStatParameter + BaseHealth + (int)CalculateStat(CharacterStatId.HealthPoint, DefaultParameterStat);
-        public float LuckCriticalDamage => _baseStatParameter + CalculateStat(CharacterStatId.LuckCritical, DefaultParameterStat);
-        public float LuckMiss => _baseStatParameter + CalculateStat(CharacterStatId.LuckMiss, DefaultParameterStat);
-        public float MoveSpeed => _baseStatParameter + CalculateStat(CharacterStatId.MoveSpeed, DefaultParameterStat);
+        public double LuckCriticalDamage => _baseStatParameter + CalculateStat(CharacterStatId.LuckCritical, DefaultParameterStat);
+        public double LuckMiss => _baseStatParameter + CalculateStat(CharacterStatId.LuckMiss, DefaultParameterStat);
+        public double MoveSpeed => _baseStatParameter + CalculateStat(CharacterStatId.MoveSpeed, DefaultParameterStat);
         public int PhysicsAttackMin => _baseMinPhysicsDamagePoint + (int)CalculateStat(CharacterStatId.PhysicsAttackPoint, DefaultParameterStat);
         public int PhysicsAttackMax => _baseMaxPhysicsDamagePoint;
         public int PhysicsDefence => _baseStatParameter + (int)CalculateStat(CharacterStatId.PhysicsDefencePoint, DefaultParameterStat);
 
-        public float CalculateStat(CharacterStatId stat, float initial)
+        public double CalculateStat(CharacterStatId stat, float initial)
         {
             if (Calculators == null)
                 return initial;

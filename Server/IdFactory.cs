@@ -1,5 +1,6 @@
 ﻿using System;
 using Server.Service;
+using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -7,9 +8,9 @@ namespace Server
 {
     public sealed class IdFactory
     {
-        public int CurrentId { get; private set; }
         public bool Initialised { get; private set; }
 
+        private int CurrentId;
         private static volatile IdFactory _instance;
         private static readonly object SyncRoot = new object();
 
@@ -23,7 +24,7 @@ namespace Server
                 lock (SyncRoot)
                 {
                     if (_instance == null)
-                        _instance = new IdFactory(0);
+                        _instance = new IdFactory();
                 }
 
                 return _instance;
@@ -43,14 +44,9 @@ namespace Server
             Initialised = true;
         }
 
-        public IdFactory(int defaultId)
-        {
-            CurrentId = defaultId;
-        }
-
         public int NextId()
         {
-            return ++CurrentId;
+            return Interlocked.Increment(ref CurrentId);
         }
     }
 }

@@ -6,5 +6,12 @@
         public float Damage;
         public float ArrowCount;
         public bool Death;
+
+        public readonly BaseSpecificationForCharacter BaseSpecification;
+
+        public CharacterTemplate(BaseSpecificationForCharacter baseSpecification)
+        {
+            BaseSpecification = baseSpecification;
+        }
     }
 }

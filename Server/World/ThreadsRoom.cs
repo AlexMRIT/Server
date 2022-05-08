@@ -39,6 +39,24 @@ namespace Server.World
             }
         }
 
+        public List<Entity> GetEntitiesByRoomId(int id)
+        {
+            try
+            {
+                List<Entity> result = new List<Entity>(ServerConfig.MaxCountPlayerForRoom);
+
+                foreach (Entity entity in ServerRooms[id].GetAllEntities())
+                    result.Add(entity);
+
+                return result;
+            }
+            catch (IndexOutOfRangeException exception)
+            {
+                ExceptionHandler.Execute(exception, nameof(IfExistEntityByRoomId));
+                return new List<Entity>(0);
+            }
+        }
+
         public Entity GetEntityById(int idRoom, int id)
         {
             try

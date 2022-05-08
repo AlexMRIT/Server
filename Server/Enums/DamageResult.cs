@@ -2,6 +2,7 @@
 {
     public enum DamageResult : byte
     {
+        DamageFail,
         DamageBlock,
         DamageMiss,
         DamageCritical,

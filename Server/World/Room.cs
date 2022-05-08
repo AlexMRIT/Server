@@ -1,6 +1,7 @@
 ﻿using System;
 using Server.Models;
 using Server.Exceptions;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -48,6 +49,12 @@ namespace Server.World
                 return null;
 
             return EntityObjects[id];
+        }
+
+        public IEnumerable<Entity> GetAllEntities()
+        {
+            foreach (KeyValuePair<int, Entity> element in EntityObjects)
+                yield return element.Value;
         }
 
         public bool AddEntity(Entity entity)

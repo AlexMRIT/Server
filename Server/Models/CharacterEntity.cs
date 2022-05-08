@@ -1,23 +1,44 @@
 ﻿using System;
+using Server.World;
 using Server.Enums;
 using Server.Template;
 using System.Threading.Tasks;
+using Server.Models.CharacterFuncStats;
+using Microsoft.Extensions.DependencyInjection;
+using Server.Network;
 
 namespace Server.Models
 {
     public sealed class CharacterEntity : Entity
     {
-        public CharacterTemplate CharacterTemplate;
-        public CharacterStats CharacterStats;
+        public readonly CharacterTemplate CharacterTemplate;
+        public readonly CharacterStats CharacterStats;
+        public readonly CharacterMovement CharacterMovement;
+        public readonly ClientProcessor ClientStream;
         public bool Online { get; set; }
-        public int RoomId { get; set; }
         public bool IsDead { get; set; }
 
-        public CharacterEntity(CharacterTemplate characterTemplate)
-            : base(characterTemplate)
+        public CharacterEntity(IServiceProvider serviceProvider, CharacterTemplate characterTemplate, ClientProcessor client)
+            : base(serviceProvider.GetService<ThreadsRoom>(), characterTemplate)
         {
             CharacterTemplate = characterTemplate;
             CharacterStats = new CharacterStats(this, characterTemplate.BaseSpecification);
+            CharacterMovement = new CharacterMovement(this);
+            ClientStream = client;
+
+            InitializeCharacterStats();
+        }
+
+        public void InitializeCharacterStats()
+        {
+            CharacterStats.AddStatFunction(FuncAttackSpeed.Instance);
+            CharacterStats.AddStatFunction(FuncCriticalDamage.Instance);
+            CharacterStats.AddStatFunction(FuncDamageCritical.Instance);
+            CharacterStats.AddStatFunction(FuncHealthPoint.Instance);
+            CharacterStats.AddStatFunction(FuncMiss.Instance);
+            CharacterStats.AddStatFunction(FuncMoveSpeed.Instance);
+            CharacterStats.AddStatFunction(FuncPhysicsAttack.Instance);
+            CharacterStats.AddStatFunction(FuncPhysicsDefence.Instance);
         }
 
         public void SetOffline()
@@ -27,7 +48,19 @@ namespace Server.Models
 
         public override async Task<DamageResult> TakeDamage(CharacterEntity target)
         {
+            if (target == null)
+                return DamageResult.DamageFail;
+
+            if (target.IsDead)
+                return DamageResult.DamageFail;
+
             throw new NotImplementedException();
+        }
+
+        public override async Task BroadcastPacketAsync(NetworkPacket packet)
+        {
+            //await ClientStream.WriteAsync()
+            await base.BroadcastPacketAsync(packet);
         }
     }
 }

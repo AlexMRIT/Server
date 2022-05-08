@@ -38,6 +38,11 @@ namespace Server.Utilite
 			z *= scale.z;
 		}
 
+		public static float Distance2D(float x, float y, float z)
+        {
+			return MathF.Sqrt(MathF.Pow(x, 2) + MathF.Pow(y, 2) + MathF.Pow(z, 2));
+        }
+
 		public override int GetHashCode()
 		{
 			return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);

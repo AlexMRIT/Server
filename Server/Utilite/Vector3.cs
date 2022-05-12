@@ -43,6 +43,16 @@ namespace Server.Utilite
 			return MathF.Sqrt(MathF.Pow(x, 2) + MathF.Pow(y, 2) + MathF.Pow(z, 2));
         }
 
+		public static float Distance2D(Vector3 vector)
+		{
+			return MathF.Sqrt(MathF.Pow(vector.x, 2) + MathF.Pow(vector.y, 2) + MathF.Pow(vector.z, 2));
+		}
+
+		public static double DistanceSq(float x1, float y1, float z1, float x2, float y2, float z2)
+		{
+			return Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2) + Math.Pow(z2 - z1, 2);
+		}
+
 		public override int GetHashCode()
 		{
 			return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);

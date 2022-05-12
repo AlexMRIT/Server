@@ -1,26 +1,29 @@
 ﻿using System;
 using Server.World;
 using Server.Enums;
+using Server.Network;
 using Server.Template;
 using System.Threading.Tasks;
 using Server.Models.CharacterFuncStats;
 using Microsoft.Extensions.DependencyInjection;
-using Server.Network;
 
 namespace Server.Models
 {
     public sealed class CharacterEntity : Entity
     {
+        public readonly Config ServerConfig;
         public readonly CharacterTemplate CharacterTemplate;
         public readonly CharacterStats CharacterStats;
         public readonly CharacterMovement CharacterMovement;
         public readonly ClientProcessor ClientStream;
+
         public bool Online { get; set; }
         public bool IsDead { get; set; }
 
         public CharacterEntity(IServiceProvider serviceProvider, CharacterTemplate characterTemplate, ClientProcessor client)
             : base(serviceProvider.GetService<ThreadsRoom>(), characterTemplate)
         {
+            ServerConfig = serviceProvider.GetService<Config>();
             CharacterTemplate = characterTemplate;
             CharacterStats = new CharacterStats(this, characterTemplate.BaseSpecification);
             CharacterMovement = new CharacterMovement(this);
@@ -59,8 +62,12 @@ namespace Server.Models
 
         public override async Task BroadcastPacketAsync(NetworkPacket packet)
         {
-            //await ClientStream.WriteAsync()
             await base.BroadcastPacketAsync(packet);
+        }
+
+        public async Task BroadcastPacketOnlyMeAsync(NetworkPacket packet)
+        {
+            await ClientStream.WriteAsync(packet);
         }
     }
 }

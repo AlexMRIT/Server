@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Server.World;
 using Server.Enums;
 using Server.Network;
@@ -21,18 +21,27 @@ namespace Server.Models
             Template = entityTemplate;
             Rooms = rooms;
         }
+
         public async virtual Task<DamageResult> TakeDamage(CharacterEntity target)
         {
             return DamageResult.DamageFail;
         }
 
-        public async virtual Task BroadcastPacketAsync(NetworkPacket packet)
+        public async virtual Task BroadcastPacketAsync(NetworkPacket packet, bool excludeYourself = true)
         {
-            Rooms.GetEntitiesByRoomId(RoomId).ForEach(async action =>
+            await Task.WhenAll(Rooms.GetEntitiesByRoomId(RoomId).Select(async action =>
             {
-                if (action is CharacterEntity characterEntity)
-                    await characterEntity.BroadcastPacketAsync(packet);
-            });
+                if (!excludeYourself)
+                {
+                    if ((action is CharacterEntity character) && character != this)
+                        await character.BroadcastPacketAsync(packet);
+                }
+                else
+                {
+                    if (action is CharacterEntity character)
+                        await character.BroadcastPacketAsync(packet);
+                }
+            }));
         }
     }
 }

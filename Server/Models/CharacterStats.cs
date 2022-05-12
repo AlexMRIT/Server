@@ -16,6 +16,7 @@ namespace Server.Models
             _strength = baseSpecification.Strenght;
             _dextity = baseSpecification.Dextity;
             _endurance = baseSpecification.Endurance;
+            _baseHealth = _currentHealth = baseSpecification.BaseHealth;
         }
 
         private const int DefaultParameterStat = 1;
@@ -26,10 +27,12 @@ namespace Server.Models
         private int _endurance;
 
         private int _baseHealth = 50;
+        private int _currentHealth = 50;
         private int _baseMinPhysicsDamagePoint = 1;
         private int _baseMaxPhysicsDamagePoint = 4;
 
         public int BaseHealth { get => _baseHealth; set => _baseHealth = value; }
+        public int CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
         public int Strength { get => _strength; set => _strength = value; }
         public int Dextity { get => _dextity; set => _dextity = value; }
         public int Endurance { get => _endurance; set => _endurance = value; }

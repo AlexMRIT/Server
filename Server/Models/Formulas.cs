@@ -16,5 +16,10 @@ namespace Server.Models
             => Math.Floor(dextity * DextetyCompute[random.Next(0, DextetyCompute.Length - 1)]);
         public static double GetEnduranceBonus(int endurance)
             => Math.Floor(endurance * EnduranceCompute[random.Next(0, EnduranceCompute.Length - 1)]);
+
+        public static void CalculateTakeDamage(CharacterStats player, CharacterStats target)
+        {
+            target.BaseHealth -= random.Next(player.PhysicsAttackMin, player.PhysicsAttackMax);
+        }
     }
 }

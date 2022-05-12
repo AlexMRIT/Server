@@ -12,7 +12,7 @@ namespace Server.Network.InnerNetwork
 
             packet.WriteString(room.RoomName);
             packet.WriteString(room.RoomDescription);
-            packet.WriteInt(room.CurrentCount);
+            packet.WriteInt(room.EntityObjects.Count);
 
             return packet;
         }

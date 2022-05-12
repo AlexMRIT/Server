@@ -108,7 +108,7 @@ namespace Server.Models
             if (IsMoving)
             {
                 UpdatePosition();
-                await NotifyStopMove();
+                UpdatePositionDirection(direction);
             }
 
             Vector3 distanceVectorOfAxis = direction - LocalWorkPosition;
@@ -138,10 +138,12 @@ namespace Server.Models
             }
         }
 
-        public async Task NotifyStopMove()
+        public async Task NotifyStopMove(bool broadcast = true, bool excludeYourself = true)
         {
             IsMoving = false;
-            await Character.BroadcastPacketAsync(StopMove.ToPacket(Character.Template.Id, DestinationPosition));
+
+            if (broadcast)
+                await Character.BroadcastPacketAsync(StopMove.ToPacket(Character.Template.Id, DestinationPosition), excludeYourself);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Server.World
 {
     public sealed class Room
     {
-        private readonly ConcurrentDictionary<int, Entity> EntityObjects;
+        public readonly ConcurrentDictionary<int, Entity> EntityObjects;
         private readonly Config ServerConfig;
         private readonly string ExceptionMessageNotAccess = "Room access error. An uninitialized area.";
 

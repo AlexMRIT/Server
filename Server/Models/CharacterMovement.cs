@@ -106,10 +106,7 @@ namespace Server.Models
         public async Task MoveTo(Vector3 direction)
         {
             if (IsMoving)
-            {
                 UpdatePosition();
-                UpdatePositionDirection(direction);
-            }
 
             Vector3 distanceVectorOfAxis = direction - LocalWorkPosition;
             if (Math.Pow(distanceVectorOfAxis.x, 2) + Math.Pow(distanceVectorOfAxis.y, 2) > 9900 * 9900)
@@ -136,6 +133,14 @@ namespace Server.Models
 
                 await Task.Delay(Character.ServerConfig.DelayMillisecondsUpdatingCharacterPositions);
             }
+        }
+
+        public async void NotifyStopMoveByPosition(Vector3 vector)
+        {
+            LocalWorkPosition = vector;
+            DestinationPosition = vector;
+
+            await NotifyStopMove(broadcast: true, excludeYourself: false);
         }
 
         public async Task NotifyStopMove(bool broadcast = true, bool excludeYourself = true)

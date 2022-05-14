@@ -1,5 +1,6 @@
 ﻿using Server.Template;
 using System.Threading;
+using Server.Service.Interface;
 
 namespace Server.Models
 {
@@ -8,12 +9,12 @@ namespace Server.Models
         private readonly Calculator[] Calculators;
         private readonly CharacterEntity Player;
 
-        public CharacterStats(CharacterEntity characterEntity, BaseSpecificationForCharacter baseSpecification)
+        public CharacterStats(CharacterEntity characterEntity, IBaseSpecification baseSpecification)
         {
             Calculators = Calculator.GetCalculatorsForStats();
             Player = characterEntity;
 
-            _strength = baseSpecification.Strenght;
+            _strength = baseSpecification.Strength;
             _dextity = baseSpecification.Dextity;
             _endurance = baseSpecification.Endurance;
             _baseHealth = _currentHealth = baseSpecification.BaseHealth;

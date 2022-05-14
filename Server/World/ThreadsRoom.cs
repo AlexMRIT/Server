@@ -88,7 +88,7 @@ namespace Server.World
 
         public void AddRoom(string name, string description)
         {
-            ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider).Initialize(name, description));
+            ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider, IdFactory.Instance.NextId()).Initialize(name, description));
         }
 
         public IEnumerable<Room> GetAllRooms()

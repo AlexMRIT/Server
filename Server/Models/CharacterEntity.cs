@@ -60,7 +60,7 @@ namespace Server.Models
             CharacterStats.AddStatFunction(FuncPhysicsDefence.Instance);
         }
 
-        public override async Task<DamageResult> TakeDamage(CharacterEntity target)
+        public override async Task<DamageResult> TakeDamageAsync(CharacterEntity target)
         {
             if (target == null)
                 return DamageResult.DamageFail;
@@ -95,14 +95,16 @@ namespace Server.Models
             await base.BroadcastPacketAsync(packet, excludeYourself);
         }
 
-        public void SetOnline(int roomId)
+        public async void SetOnline(int roomId)
         {
             Online = true;
             Rooms.AddEntity(roomId, this);
+            ClientStream.CurrentSession.SessionClientGamePlaying = true;
+            await BroadcastPacketAsync(AddMe.ToPacket(this, ClientStream.CurrentSession), excludeYourself: false);
             RoomId = roomId;
         }
 
-        public void SetOffline()
+        public async void SetOffline()
         {
             Online = false;
 
@@ -113,6 +115,8 @@ namespace Server.Models
             }
 
             CharacterService.UpdateCharacterAsync(this.ToContract());
+            ClientStream.CurrentSession.SessionClientGamePlaying = false;
+            await BroadcastPacketAsync(DeleteMe.ToPacket(this, ClientStream.CurrentSession), excludeYourself: false);
             Rooms.RemoveEntity(RoomId, this);
         }
     }

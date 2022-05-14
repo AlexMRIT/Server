@@ -34,10 +34,13 @@ namespace Server.RequestPacketHandler
             {
                 CharacterEntity target = (CharacterEntity)Rooms.GetEntityById(player.RoomId, ObjectIds[iterator]);
 
+                if (target is null)
+                    continue;
+
                 if (target.IsDead)
                     continue;
 
-                DamageResult damageResult = await player.TakeDamage(target);
+                DamageResult damageResult = await player.TakeDamageAsync(target);
                 await Client.WriteAsync(SendDamageResult.ToPacket(damageResult));
             }
         }

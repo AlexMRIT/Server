@@ -32,7 +32,7 @@ namespace Server.Repository
             return false;
         }
 
-        public async void CreateCharacterAsync(CharacterContract characterContract)
+        public async Task<CharacterContract> CreateCharacterAsync(CharacterContract characterContract)
         {
             try
             {
@@ -43,10 +43,13 @@ namespace Server.Repository
                     _login_name = characterContract.LoginName,
                     _name = characterContract.Name
                 });
+
+                return characterContract;
             }
             catch (MySqlException exception)
             {
                 ExceptionHandler.ExecuteMySQLException(exception, nameof(CreateCharacterAsync));
+                return null;
             }
         }
 

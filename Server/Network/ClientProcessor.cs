@@ -107,7 +107,7 @@ namespace Server.Network
 
             try
             {
-                if (CurrentCharacter.Online)
+                if ((CurrentCharacter?.Online).Value)
                     CurrentCharacter.SetOffline();
             }
             catch (NullReferenceException exception)

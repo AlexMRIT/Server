@@ -1,4 +1,5 @@
 ﻿using Server.Models;
+using Server.Utilite;
 using System.Collections.Generic;
 
 namespace Server.Network.InnerNetwork
@@ -10,8 +11,6 @@ namespace Server.Network.InnerNetwork
 
         public readonly List<KeyValuePair<byte, int>> Attributes = new List<KeyValuePair<byte, int>>(capacity: 2);
 
-        private static readonly byte Opcode = 0x06;
-
         public void AddAttribute(byte typeAttribute, int valueAttribute)
         {
             Attributes.Add(new KeyValuePair<byte, int>(typeAttribute, valueAttribute));
@@ -19,7 +18,7 @@ namespace Server.Network.InnerNetwork
 
         internal static NetworkPacket ToPacket(StatusUpdate update, CharacterEntity character)
         {
-            NetworkPacket packet = new NetworkPacket(Opcode);
+            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerCharacterUpdate);
 
             packet.WriteInt(character.Template.Id);
             packet.WriteInt(update.Attributes.Count);

@@ -9,16 +9,18 @@ namespace Server.World
 {
     public sealed class Room
     {
-        public readonly ConcurrentDictionary<int, Entity> EntityObjects;
+        private readonly ConcurrentDictionary<int, Entity> EntityObjects;
         private readonly Config ServerConfig;
         private readonly string ExceptionMessageNotAccess = "Room access error. An uninitialized area.";
 
+        public readonly int RoomId;
         public string RoomName { get; private set; }
         public string RoomDescription { get; private set; }
         public bool Initialized { get; private set; }
 
-        public Room(IServiceProvider serviceProvider)
+        public Room(IServiceProvider serviceProvider, int id)
         {
+            RoomId = id;
             ServerConfig = serviceProvider.GetService<Config>();
             EntityObjects = new ConcurrentDictionary<int, Entity>();
         }
@@ -38,6 +40,11 @@ namespace Server.World
                 throw new RoomInitializeException(ExceptionMessageNotAccess);
 
             return EntityObjects.ContainsKey(entity.Template.Id);
+        }
+
+        public int GetCountObjects()
+        {
+            return EntityObjects.Count;
         }
 
         public Entity GetEntityById(int id)

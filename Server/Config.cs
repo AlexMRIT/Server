@@ -36,5 +36,10 @@
         /// How many ticks to update the position in the movement of the character <see cref="int"/>. Default 1000
         /// </summary>
         public readonly int DelayMillisecondsUpdatingCharacterPositions = 1000;
+
+        /// <summary>
+        /// Create automatically a character in case it is not found by the account?
+        /// </summary>
+        public readonly bool AutoCreateCharacter = true;
     }
 }

@@ -2,6 +2,7 @@
 using Server.World;
 using Server.Network;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Server.Network.InnerNetwork;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,11 +31,11 @@ namespace Server.RequestPacketHandler
                 return;
             }
 
-            foreach (Room room in Rooms.GetAllRooms())
-            {
-                if (!Client.IsDisconnected)
-                    await Client.WriteAsync(SendRoom.ToPacket(room));
-            }
+            List<Room> roomsCollection = new List<Room>();
+            roomsCollection.AddRange(Rooms.GetAllRooms());
+
+            Client.CurrentSession.SessionClientMatchSearch = true;
+            await Client.WriteAsync(SendRoom.ToPacket(roomsCollection, Client.CurrentSession));
         }
     }
 }

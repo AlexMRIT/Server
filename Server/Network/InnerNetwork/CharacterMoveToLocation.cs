@@ -4,11 +4,9 @@ namespace Server.Network.InnerNetwork
 {
     public sealed class CharacterMoveToLocation
     {
-        private const byte Opcode = 0x05;
-
         internal static NetworkPacket ToPacket(int id, Vector3 direction)
         {
-            NetworkPacket packet = new NetworkPacket(Opcode);
+            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerCharacterMoveToLocation);
 
             packet.WriteInt(id);
 

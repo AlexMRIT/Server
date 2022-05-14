@@ -1,12 +1,12 @@
-﻿namespace Server.Network.InnerNetwork
+﻿using Server.Utilite;
+
+namespace Server.Network.InnerNetwork
 {
     public static class ServerLoginFail
     {
-        private const byte Opcode = 0x00;
-
         internal static NetworkPacket ToPacket(byte opCode)
         {
-            NetworkPacket packet = new NetworkPacket(Opcode);
+            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerLoginFail);
             packet.WriteByte(opCode);
 
             return packet;

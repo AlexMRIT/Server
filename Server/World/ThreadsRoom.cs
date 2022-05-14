@@ -21,7 +21,10 @@ namespace Server.World
             ServerConfig = serviceProvider.GetService<Config>();
 
             for (int iterator = 0; iterator < ServerConfig.MaxOpenRoomPreStartServer; iterator++)
-                ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider).Initialize($"Room {iterator}", "Server Room"));
+            {
+                int id = IdFactory.Instance.NextId();
+                ServerRooms.TryAdd(id, new Room(ServiceProvider, id).Initialize($"Room {iterator}", "Server Room"));
+            }
 
             Console.WriteLine($"Initialized {ServerConfig.MaxOpenRoomPreStartServer} rooms.");
         }

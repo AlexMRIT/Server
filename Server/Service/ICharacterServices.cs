@@ -9,7 +9,7 @@ namespace Server.Service
 
         Task<bool> CheckIfCharacterNameExistsAsync(string name);
 
-        void CreateCharacterAsync(CharacterContract characterContract);
+        Task<CharacterContract> CreateCharacterAsync(CharacterContract characterContract);
 
         void UpdateCharacterAsync(CharacterContract characterContract);
 

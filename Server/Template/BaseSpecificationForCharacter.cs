@@ -1,18 +1,28 @@
-﻿namespace Server.Template
+﻿using Server.Service.Interface;
+
+namespace Server.Template
 {
-    public sealed class BaseSpecificationForCharacter
+    public sealed class BaseSpecificationForCharacter : IBaseSpecification
     {
-        public readonly int Strenght;
-        public readonly int Dextity;
-        public readonly int Endurance;
-        public readonly int BaseHealth;
+        private readonly int _strength;
+        private readonly int _dextity;
+        private readonly int _endurace;
+        private readonly int _baseHealth;
 
         public BaseSpecificationForCharacter()
         {
-            Strenght = 1;
-            Dextity = 1;
-            Endurance = 1;
-            BaseHealth = 50;
+            _strength = 1;
+            _dextity = 1;
+            _endurace = 1;
+            _baseHealth = 50;
         }
+
+        public int Strength => _strength;
+
+        public int Dextity => _dextity;
+
+        public int Endurance => _endurace;
+
+        public int BaseHealth => _baseHealth;
     }
 }

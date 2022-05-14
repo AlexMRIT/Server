@@ -1,4 +1,6 @@
-﻿namespace Server.Template
+﻿using Server.Service.Interface;
+
+namespace Server.Template
 {
     public sealed class CharacterTemplate : EntityTemplate
     {
@@ -7,9 +9,9 @@
         public float ArrowCount;
         public bool Death;
 
-        public readonly BaseSpecificationForCharacter BaseSpecification;
+        public readonly IBaseSpecification BaseSpecification;
 
-        public CharacterTemplate(BaseSpecificationForCharacter baseSpecification)
+        public CharacterTemplate(IBaseSpecification baseSpecification)
         {
             BaseSpecification = baseSpecification;
         }

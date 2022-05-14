@@ -22,7 +22,7 @@ namespace Server.Models
             Rooms = rooms;
         }
 
-        public async virtual Task<DamageResult> TakeDamage(CharacterEntity target)
+        public async virtual Task<DamageResult> TakeDamageAsync(CharacterEntity target)
         {
             return DamageResult.DamageFail;
         }

@@ -1,16 +1,16 @@
-﻿namespace Server.Network.InnerNetwork
+﻿using Server.Utilite;
+
+namespace Server.Network.InnerNetwork
 {
     public sealed class LoginOk
     {
-        private const byte Opcode = 0x01;
-
         internal static NetworkPacket ToPacket(ClientProcessor client)
         {
-            NetworkPacket packet = new NetworkPacket(Opcode);
+            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerLoginSuccess);
 
             packet.InternalWriteBool(client.CurrentSession.SessionClientAuthorization);
             packet.InternalWriteBool(client.CurrentSession.SessionClientMatchSearch);
-            packet.InternalWriteBool(client.CurrentSession.SessionCLientGamePlaying);
+            packet.InternalWriteBool(client.CurrentSession.SessionClientGamePlaying);
 
             return packet;
         }

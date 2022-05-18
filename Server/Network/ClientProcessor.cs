@@ -122,9 +122,17 @@ namespace Server.Network
             ManagerClient.ClientDisconnectFromRegister(Address.ToString().Split(':')[0]);
         }
 
-        public bool LoggedAlready(int id)
+        public bool LoggedAlready()
         {
-            return (ManagerClient.LoggedAlready(Address.ToString()).CurrectAccountContract?.Id.Equals(id)).Value;
+            ClientProcessor client = ManagerClient.LoggedAlready(Address.ToString());
+
+            if (client is null)
+                return false;
+
+            if (client.CurrectAccountContract is null)
+                return false;
+
+            return true;
         }
 
         public void LoggedOtherAccountDisconnect()

@@ -47,8 +47,9 @@ namespace Server.Service
                     _password = password
                 });
 
-                AccountContract accountContract = new AccountContract(id)
+                AccountContract accountContract = new AccountContract()
                 {
+                    Id = id,
                     Login = login,
                     Password = password
                 };

@@ -10,7 +10,7 @@
         public readonly static string UpdateCharacter = "update characters set id=@_id, score=@_score, login_name=@_login_name, name=@_name where login_name=@_login_name";
         public readonly static string CheckIfAccountIsCorrect = "select distinct 1 from accounts where login=@_login and password=@_password";
         public readonly static string CreateAccount = "insert into accounts (id, login, password) values (@_id, @_login, @_password)";
-        public readonly static string GetAccountByLogin = "select id as Id, login, password as Password from accounts where login=@_login";
+        public readonly static string GetAccountByLogin = "select id as Id, login as Login, password as Password from accounts where login=@_login";
         public readonly static string GetAccountIdsList = "select id from accounts";
         public readonly static string GetPlayerIdsList = "select id from characters";
     }

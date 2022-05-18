@@ -20,6 +20,7 @@ namespace Server.Network
             ClientPackets.TryAdd((byte)Opcode.RequestAttackHandle, typeof(RequestAttackHandle));
             ClientPackets.TryAdd((byte)Opcode.RequestEnterRoom, typeof(RequestEnterRoom));
             ClientPackets.TryAdd((byte)Opcode.RequestMovementStopSync, typeof(RequestMovementStopSync));
+            ClientPackets.TryAdd((byte)Opcode.RequestCreateServer, typeof(RequestCreateServer));
         }
 
         public void HandlePacket(NetworkPacket packet, ClientProcessor client)

@@ -66,7 +66,7 @@ namespace Server.RequestPacketHandler
                     return;
                 }
 
-                if (!Client.LoggedAlready())
+                if (Client.LoggedAlready())
                 {
                     await Client.WriteAsync(ServerLoginFail.ToPacket(LoginFailReason.ReasonAccountInUse));
                     Client.LoggedOtherAccountDisconnect();

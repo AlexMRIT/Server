@@ -137,7 +137,7 @@ namespace Server.Network
 
         public void LoggedOtherAccountDisconnect()
         {
-            ManagerClient.LoggedAlready(Address.ToString()).Disconnect();
+            ManagerClient.LoggedAlready(Address.ToString())?.Disconnect();
         }
     }
 }

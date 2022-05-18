@@ -47,7 +47,7 @@ namespace Server.Network
         public void ClientDisconnectFromRegister(string ip)
         {
             ClientSuccessfullyRegister.TryRemove(ip, out _);
-            Console.WriteLine($"{FloodClientCollection.Count} active connections");
+            Console.WriteLine($"{ClientSuccessfullyRegister.Count} active connections");
         }
 
         public ClientProcessor LoggedAlready(string ip)

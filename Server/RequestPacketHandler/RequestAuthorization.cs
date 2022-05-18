@@ -51,9 +51,7 @@ namespace Server.RequestPacketHandler
             if (accountContract == null)
             {
                 if (ServerConfig.AutoCreateAccount)
-                {
                     accountContract = await AccountService.CreateAccountAsync(Login, Password);
-                }
                 else
                 {
                     await Client.WriteAsync(ServerLoginFail.ToPacket(LoginFailReason.ReasonUserOrPassWrong));
@@ -79,6 +77,7 @@ namespace Server.RequestPacketHandler
             Client.CurrectAccountContract = accountContract;
             Client.CurrentSession.SessionClientAuthorization = true;
             await Client.WriteAsync(LoginOk.ToPacket(Client));
+            Console.WriteLine($"Client: {Client.Address} has authentication!");
         }
     }
 }

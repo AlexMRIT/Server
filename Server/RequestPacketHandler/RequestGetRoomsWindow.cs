@@ -13,10 +13,12 @@ namespace Server.RequestPacketHandler
         private readonly ClientProcessor Client;
         private readonly ClientSession CurrentClientSession;
         private readonly ThreadsRoom Rooms;
+        private readonly Config ServerConfig;
 
         public RequestGetRoomsWindow(IServiceProvider serviceProvider, NetworkPacket packet, ClientProcessor client)
         {
             Rooms = serviceProvider.GetService<ThreadsRoom>();
+            ServerConfig = serviceProvider.GetService<Config>();
             Client = client;
 
             CurrentClientSession = new ClientSession(packet.InternalReadBool(), packet.InternalReadBool(), packet.InternalReadBool());
@@ -35,7 +37,7 @@ namespace Server.RequestPacketHandler
             roomsCollection.AddRange(Rooms.GetAllRooms());
 
             Client.CurrentSession.SessionClientMatchSearch = true;
-            await Client.WriteAsync(SendRoom.ToPacket(roomsCollection, Client.CurrentSession));
+            await Client.WriteAsync(SendRoom.ToPacket(roomsCollection, Client.CurrentSession, ServerConfig));
         }
     }
 }

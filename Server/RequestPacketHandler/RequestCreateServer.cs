@@ -12,6 +12,7 @@ namespace Server.RequestPacketHandler
     {
         private readonly ClientProcessor Client;
         private readonly ThreadsRoom Rooms;
+        private readonly Config ServerConfig;
 
         private readonly string ServerName;
         private readonly string DescriptionName;
@@ -20,6 +21,7 @@ namespace Server.RequestPacketHandler
         {
             Client = client;
             Rooms = serviceProvider.GetService<ThreadsRoom>();
+            ServerConfig = serviceProvider.GetService<Config>();
 
             ServerName = packet.ReadString(packet.ReadInt());
             DescriptionName = packet.ReadString(packet.ReadInt());
@@ -30,7 +32,7 @@ namespace Server.RequestPacketHandler
             Rooms.AddRoom(ServerName, DescriptionName);
             List<Room> rooms = new List<Room>();
             rooms.AddRange(Rooms.GetAllRooms());
-            await Client.WriteAsync(SendRoom.ToPacket(rooms, Client.CurrentSession));
+            await Client.WriteAsync(SendRoom.ToPacket(rooms, Client.CurrentSession, ServerConfig));
 
             Console.WriteLine($"Create a new server. Name: {ServerName}, Description: {DescriptionName}");
         }

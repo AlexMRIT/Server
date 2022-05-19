@@ -71,6 +71,7 @@ namespace Server.RequestPacketHandler
             player.SetOnline(RoomId);
 
             Client.CurrentSession.SessionClientGamePlaying = true;
+            Client.CurrentCharacter = player;
             await Client.WriteAsync(EnterRoom.ToPacket(player, Client.CurrentSession));
         }
     }

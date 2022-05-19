@@ -13,5 +13,6 @@
         public static readonly byte OpcodeServerExitAllCharacterForRoom = 0x08;
         public static readonly byte OpcodeServerDeleteMe = 0x09;
         public static readonly byte OpcodeServerAddMe = 0x0A;
+        public static readonly byte OpcodeServerEnterRoom = 0x0B;
     }
 }

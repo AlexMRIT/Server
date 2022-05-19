@@ -7,7 +7,7 @@ namespace Server.Network.InnerNetwork
     {
         internal static NetworkPacket ToPacket(CharacterEntity character, ClientSession session)
         {
-            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerDeleteMe);
+            NetworkPacket packet = new NetworkPacket(OpcodeExtension.OpcodeServerEnterRoom);
 
             packet.WriteInt(character.CharacterTemplate.Id);
             packet.WriteInt(character.Score);

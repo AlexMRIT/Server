@@ -50,10 +50,11 @@ namespace Server.RequestPacketHandler
                 if (ServerConfig.AutoCreateCharacter)
                 {
                     int id = IdFactory.Instance.NextId();
-                    CharacterContract characterContract = new CharacterContract(id)
+                    CharacterContract characterContract = new CharacterContract()
                     {
+                        Id = id,
                         Score = 0,
-                        Name = id.ToString(),
+                        Name = $"Name: {id}",
                         LoginName = Client.CurrectAccountContract.Login
                     };
                     contract = await CharacterServices.CreateCharacterAsync(characterContract);
@@ -69,6 +70,9 @@ namespace Server.RequestPacketHandler
 
             CharacterEntity player = new CharacterEntity(ServiceProvider, template, Client);
             player.SetOnline(RoomId);
+
+            player.Login = contract.LoginName;
+            player.Name = contract.Name;
 
             Client.CurrentSession.SessionClientGamePlaying = true;
             Client.CurrentCharacter = player;

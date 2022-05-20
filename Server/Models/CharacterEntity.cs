@@ -72,7 +72,6 @@ namespace Server.Models
             bool isDeath = EventsHandler.ValidDeathTarget(target, async () =>
             {
                 await target.BroadcastPacketAsync(CharacterDeath.ToPacket());
-                await Task.Delay(1000);
             });
 
             if (isDeath)
@@ -90,6 +89,11 @@ namespace Server.Models
             return DamageResult.DamageNormal;
         }
 
+        public async Task SendOnlyMe(NetworkPacket packet)
+        {
+            await ClientStream.WriteAsync(packet);
+        }
+
         public override async Task BroadcastPacketAsync(NetworkPacket packet, bool excludeYourself = true)
         {
             await base.BroadcastPacketAsync(packet, excludeYourself);
@@ -98,10 +102,13 @@ namespace Server.Models
         public async void SetOnline(int roomId)
         {
             Online = true;
-            Rooms.AddEntity(roomId, this);
-            ClientStream.CurrentSession.SessionClientGamePlaying = true;
-            await BroadcastPacketAsync(AddMe.ToPacket(this, ClientStream.CurrentSession), excludeYourself: false);
             RoomId = roomId;
+            Rooms.AddEntity(roomId, this);
+            await BroadcastPacketAsync(AddMe.ToPacket(this), excludeYourself: false);
+
+            foreach (Entity character in Rooms.GetEntitiesByRoomId(roomId))
+                if (character != this)
+                    await SendOnlyMe(AddMe.ToPacket(character as CharacterEntity));
         }
 
         public async void SetOffline()

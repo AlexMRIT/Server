@@ -34,12 +34,12 @@ namespace Server.Models
                 if (!excludeYourself)
                 {
                     if ((action is CharacterEntity character) && character != this)
-                        await character.BroadcastPacketAsync(packet);
+                        await character.SendOnlyMe(packet);
                 }
                 else
                 {
                     if (action is CharacterEntity character)
-                        await character.BroadcastPacketAsync(packet);
+                        await character.SendOnlyMe(packet);
                 }
             }));
         }

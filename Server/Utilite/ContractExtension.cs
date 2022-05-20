@@ -7,8 +7,9 @@ namespace Server.Utilite
     {
         public static CharacterContract ToContract(this CharacterEntity character)
         {
-            return new CharacterContract(character.Template.Id)
+            return new CharacterContract()
             {
+                Id = character.Template.Id,
                 Score = character.Score,
                 LoginName = character.Login,
                 Name = character.Name

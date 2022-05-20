@@ -46,12 +46,7 @@ namespace Server.World
         {
             try
             {
-                List<Entity> result = new List<Entity>(ServerConfig.MaxCountPlayerForRoom);
-
-                foreach (Entity entity in ServerRooms[id].GetAllEntities())
-                    result.Add(entity);
-
-                return result;
+                return new List<Entity>(ServerRooms[id].GetAllEntities());
             }
             catch (IndexOutOfRangeException exception)
             {
@@ -88,7 +83,8 @@ namespace Server.World
 
         public void AddRoom(string name, string description)
         {
-            ServerRooms.TryAdd(IdFactory.Instance.NextId(), new Room(ServiceProvider, IdFactory.Instance.NextId()).Initialize(name, description));
+            int id = IdFactory.Instance.NextId();
+            ServerRooms.TryAdd(id, new Room(ServiceProvider, id).Initialize(name, description));
         }
 
         public IEnumerable<Room> GetAllRooms()

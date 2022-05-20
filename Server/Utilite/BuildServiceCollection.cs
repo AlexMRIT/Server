@@ -19,6 +19,7 @@ namespace Server.Utilite
 
             serviceDescriptors.AddSingleton<ICheckService, CheckRepository>();
             serviceDescriptors.AddSingleton<IAccountServices, AccountServices>();
+            serviceDescriptors.AddSingleton<ICharacterServices, CharacterServices>();
             serviceDescriptors.AddSingleton<IGetAllIdsInitialise, GetAllIdsInitialise>();
         }
     }

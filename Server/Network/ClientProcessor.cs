@@ -119,7 +119,7 @@ namespace Server.Network
             StreamClient.Close();
             NetworkStreamClient.Close();
 
-            ManagerClient.ClientDisconnectFromRegister(Address.ToString().Split(':')[0]);
+            ManagerClient.ClientDisconnectFromRegister(Address.ToString());
         }
 
         public bool LoggedAlready()

@@ -40,8 +40,13 @@ namespace Server.Network
             FloodClientCollection.AddOrUpdate(ip, DateTime.UtcNow.AddMilliseconds(3000), (a, b) => DateTime.UtcNow.AddMilliseconds(3000));
             ClientProcessor gameClient = new ClientProcessor(this, client, PacketHandler);
 
-            ClientSuccessfullyRegister.TryAdd(ip, gameClient);
-            Console.WriteLine($"{FloodClientCollection.Count} active connections");
+            if (!ClientSuccessfullyRegister.TryAdd(client.Client.RemoteEndPoint.ToString(), gameClient))
+            {
+                Console.WriteLine("Duplicate connection client!");
+                gameClient.Disconnect();
+                return;
+            }
+            Console.WriteLine($"{ClientSuccessfullyRegister.Count} active connections");
         }
 
         public void ClientDisconnectFromRegister(string ip)
